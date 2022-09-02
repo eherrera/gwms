@@ -1,10 +1,10 @@
 /**
- * Hack for mongoose-paginate, removes 'id' from results
+ * Hack for mongoose-paginate, removes 'id' and nested from results
  * @param {Object} result - result object
  */
-const cleanPaginationID = (result = {}) => {
-  result.docs.map((element) => delete element.id)
+const cleanPaginationIDAndNested = (result = {}) => {
+  result.docs.map((element) => {delete element.id; delete element.devices})
   return result
 }
 
-module.exports = { cleanPaginationID }
+module.exports = { cleanPaginationIDAndNested }

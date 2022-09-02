@@ -1,7 +1,7 @@
 const { buildErrObject } = require('../../middleware/utils')
 
 const { listInitOptions } = require('./listInitOptions')
-const { cleanPaginationID } = require('./cleanPaginationID')
+const { cleanPaginationIDAndNested } = require('./cleanPaginationID')
 
 /**
  * Gets items from database
@@ -15,7 +15,7 @@ const getItems = async (req = {}, model = {}, query = {}) => {
       if (err) {
         return reject(buildErrObject(422, err.message))
       }
-      resolve(cleanPaginationID(items))
+      resolve(cleanPaginationIDAndNested(items))
     })
   })
 }

@@ -12,14 +12,19 @@ const createItemInDb = ({
   serialNumber = '',
   name = '',
   ipv4 = '',
-  devices = []
+  devices = ''
 }) => {
   return new Promise((resolve, reject) => {
+    let devicesArray = []
+    if (devices && devices.length > 0) {
+      devicesArray = JSON.parse(devices)
+    }
     const gateway = new Gateway({
       name,
       serial_number: serialNumber,
       ipv4,
-      devices
+      devices: devicesArray,
+      devices_count: devicesArray.length
     })
     gateway.save((err, item) => {
       if (err) {
@@ -39,7 +44,7 @@ const createItemInDb = ({
 const createGateway = async (req, res) => {
   try {
     req = matchedData(req)
-    console.log({req});
+    console.log({ req })
     const doesGatewayExists = await gatewayExists(req.serialNumber)
     if (!doesGatewayExists) {
       const item = await createItemInDb(req)
