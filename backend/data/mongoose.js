@@ -2,25 +2,22 @@ const mongoose = require('mongoose');
 
 const uri = process.env.MONGODB_URI;
 
-console.log({uri});
+console.log({ uri });
 
-let connection;
-const connect = async () => {
+const connect = async (callback) => {
   try {
-    connection = await mongoose.createConnection(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      bufferCommands: false, // Disable mongoose buffering
-    });
-    return connection;
+    console.log('connecting to mongodb...');
+    mongoose.connect(
+      uri,
+      {
+        autoIndex: false,
+      },
+      callback
+    );
   } catch (e) {
     console.error('Could not connect to MongoDB...');
     throw e;
   }
 };
 
-function getConnection() {
-  return connection;
-}
-
-module.exports = { connect, getConnection };
+module.exports = { connect };
