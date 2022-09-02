@@ -3,6 +3,8 @@ const validator = require('validator')
 const { check } = require('express-validator')
 const net = require('net')
 
+const maxDevices = 10
+
 /**
  * Validates create new item request
  */
@@ -27,6 +29,13 @@ const validateCreateGateway = [
     .withMessage('IS_EMPTY')
     .custom(net.isIPv4)
     .withMessage('NOT_A_VALID_IP'),
+  check('devices')
+    .optional()
+    .custom((s) => {
+      var devices = JSON.parse(s)
+      return devices.length <= maxDevices
+    })
+    .withMessage(`NO_MORE_THAN_${maxDevices}_DEVICES`),
   (req, res, next) => {
     validateResult(req, res, next)
   }

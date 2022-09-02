@@ -1,6 +1,6 @@
 const { buildSort } = require('./buildSort')
 const { checkQueryString } = require('./checkQueryString')
-const { cleanPaginationID } = require('./cleanPaginationID')
+const { cleanPaginationIDAndNested: cleanPaginationID } = require('./cleanPaginationID')
 const { createItem } = require('./createItem')
 const { deleteItem } = require('./deleteItem')
 const { getItem } = require('./getItem')
