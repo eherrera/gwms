@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const { getConnection } = require('../mongoose');
-const conn = getConnection();
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
@@ -8,8 +6,10 @@ const schema = new Schema({
   vendor: { type: String, required: true },
   created: { type: Date },
   status: Boolean,
-  gateway: { type: Schema.Types.ObjectId, ref: 'Gateway' }
+  gateway: { type: Schema.Types.ObjectId, ref: 'Gateway' },
 });
 schema.path('uid').index({ unique: true });
 
-module.exports = conn.model('Device', schema, { optimisticConcurrency: true });
+module.exports = mongoose.model('Device', schema, {
+  optimisticConcurrency: true,
+});

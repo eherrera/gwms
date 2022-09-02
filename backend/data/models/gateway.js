@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const { getConnection } = require('../mongoose');
-const conn = getConnection();
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
@@ -11,4 +9,4 @@ const schema = new Schema({
 });
 schema.path('serial_number').index({ unique: true });
 
-module.exports = conn.model('Gateway', schema, { optimisticConcurrency: true });
+module.exports = mongoose.model('Gateway', schema, { optimisticConcurrency: true});
