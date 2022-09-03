@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'environments/environment';
-import { Observable } from 'rxjs';
-import { ServerDataSource } from 'ng2-smart-table';
+import { CustomServerDataSource } from './custom-server-datasource';
 
 @Injectable({
   providedIn: 'root',
@@ -10,14 +9,14 @@ import { ServerDataSource } from 'ng2-smart-table';
 export class ApiService {
   private headers: HttpHeaders = new HttpHeaders();
 
-  private gatewaysDataSource: ServerDataSource;
+  private gatewaysDataSource: CustomServerDataSource;
 
   constructor(private http: HttpClient) {
     this.headers = this.headers.set('Content-Type', 'application/json');
   }
 
   getGatewayDatasource() {
-    this.gatewaysDataSource = new ServerDataSource(this.http, {
+    this.gatewaysDataSource = new CustomServerDataSource(this.http, {
       dataKey: 'docs',
       filterFieldKey: 'filter',
       sortFieldKey: 'sort',

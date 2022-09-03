@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ServerDataSource } from 'ng2-smart-table';
 import { ApiService } from '@services/api.service';
+import { CustomServerDataSource } from '@services/custom-server-datasource';
 
 @Component({
   selector: 'gateways-main-table',
@@ -38,16 +38,21 @@ export class GatewaysMainTableComponent implements OnInit {
     },
   };
 
-  source: ServerDataSource;
+  source: CustomServerDataSource;
 
-  data = [
-    // ... our data here
-  ];
+  public isLoadingData = false;
 
-  constructor(private service: ApiService) {}
+  constructor(private service: ApiService) {
+    this.source = this.service.getGatewayDatasource();
+    this.source.onUpdateStarted().subscribe(() => {
+      setTimeout(() => (this.isLoadingData = true));
+    });
+  }
 
   ngOnInit() {
-    this.source = this.service.getGatewayDatasource();
+    this.source.onChanged().subscribe(() => {
+      setTimeout(() => (this.isLoadingData = false));
+    });
   }
 
   onSearch(query: string = '') {
