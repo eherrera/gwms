@@ -44,7 +44,7 @@ const createItemInDb = ({
 const createGateway = async (req, res) => {
   try {
     req = matchedData(req)
-    console.log({ req })
+    
     const doesGatewayExists = await gatewayExists(req.serialNumber)
     if (!doesGatewayExists) {
       const item = await createItemInDb(req)
