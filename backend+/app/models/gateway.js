@@ -17,7 +17,6 @@ const GatewaySchema = new mongoose.Schema(
     ]
   },
   {
-    versionKey: false,
     timestamps: true
   }
 )

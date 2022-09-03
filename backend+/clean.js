@@ -1,13 +1,13 @@
 require('dotenv-safe').config()
-import initMongo from './config/mongo'
-import { readdirSync } from 'fs'
+const initMongo = require('./config/mongo')
+const fs = require('fs')
 const modelsPath = `./app/models`
-import { removeExtensionFromFile } from './app/middleware/utils'
+const { removeExtensionFromFile } = require('./app/middleware/utils')
 
 initMongo()
 
 // Loop models path and loads every file as a model except index file
-const models = readdirSync(modelsPath).filter((file) => {
+const models = fs.readdirSync(modelsPath).filter((file) => {
   return removeExtensionFromFile(file) !== 'index'
 })
 
