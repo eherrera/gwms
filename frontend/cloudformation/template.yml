@@ -1,0 +1,192 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+Description: "gwms frontend stack"
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "GWSM Content Configuration"
+        Parameters:
+          - GWMSSiteS3BucketName
+      -
+        Label:
+          default: "Custom Domain Configuration"
+        Parameters:
+          - CustomDomainName
+          - CustomDomainNameAcmCertArn
+          - UseRoute53Nameservers
+
+Parameters:
+  GWMSSiteS3BucketName:
+    Type: String
+    Description: The S3 bucket in which the web application code is stored. Bucket names are globally unique, so you must change this.
+
+  CustomDomainName:
+    Type: String
+    Description: Optionally provide a custom domain name associated with an ACM cert to create the auth portal at that domain name (provide with the format foo.bar.net). Leave blank to create an auth portal without a custom domain name. Standing up a auth portal stack with a custom domain name will take significantly longer than without.
+    Default: ''
+
+  CustomDomainNameAcmCertArn:
+    Type: String
+    Description: If you provided a domain name associated with an acm cert, then you must also specify here the acm cert's arn. Leave this blank to create an auth portal without a custom domain name.
+    Default: ''
+
+  UseRoute53Nameservers:
+    Type: String
+    Description: Only applicable if creating a custom domain name for your auth portal. Defaults to false, and you'll need to provide your own nameserver hosting. If set to true, a Route53 HostedZone and RecordSet are created for you.
+    Default: 'false'
+    AllowedValues:
+      - 'false'
+      - 'true'
+    ConstraintDescription: Malformed input - Parameter UseRoute53Nameservers value must be either 'true' or 'false'
+
+  DevelopmentMode:
+    Type: String
+    Description: Enabling this weakens security features (OAI, SSL, site S3 bucket with public read ACLs, Cognito callback verification, CORS, etc.) for easier development. It also breaks frontend routing (except to /index.html), including deep linking and page refresh. Do not enable this in production! Additionally, do not update a stack that was previously in development mode to be a production stack; instead, make a new stack that has never been in development mode.
+    Default: 'false'
+    AllowedValues:
+      - 'false'
+      - 'true'
+    ConstraintDescription: Malformed input - Parameter DevelopmentMode value must be either 'true' or 'false'
+
+Conditions:
+  UseCustomDomainName: !And [!And [!Not [!Equals [!Ref CustomDomainName, '']], !Not [!Equals [!Ref CustomDomainNameAcmCertArn, '']]], !Condition NotDevelopmentMode]
+  NoCustomDomainName: !And [!Not [ !Condition UseCustomDomainName ], !Condition NotDevelopmentMode]
+  UseRoute53: !And [!Equals [!Ref UseRoute53Nameservers, 'true'], !Condition UseCustomDomainName]
+  DevelopmentMode: !Equals [!Ref DevelopmentMode, 'true']
+  NotDevelopmentMode: !Not [!Condition DevelopmentMode]
+  InUSEastOne: !Equals [!Ref 'AWS::Region', 'us-east-1']
+
+Resources:
+  GWMSSiteS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref GWMSSiteS3BucketName
+
+  GWMSSiteS3BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Condition: 'NotDevelopmentMode'
+    Properties:
+      Bucket: !Ref GWMSSiteS3Bucket
+      PolicyDocument:
+        Statement:
+          - Action: 's3:GetObject'
+            Effect: Allow
+            Resource: !Sub 'arn:aws:s3:::${GWMSSiteS3Bucket}/*'
+            Principal:
+              AWS: !Sub >-
+                arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity
+                ${CloudFrontOriginAccessIdentity}
+
+  CloudFrontOriginAccessIdentity:
+    Type: 'AWS::CloudFront::CloudFrontOriginAccessIdentity'
+    Condition: 'NotDevelopmentMode'
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Ref 'AWS::StackName'
+
+  CustomDomainCloudfrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    DependsOn: GWMSSiteS3Bucket
+    Condition: UseCustomDomainName
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref CustomDomainName
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 403
+            ResponsePagePath: '/index.html'
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId: 'gwms-frontend-s3-bucket'
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        Comment: !Sub '${AWS::StackName} distribution'
+        Origins:
+          - Id: 'gwms-frontend-s3-bucket'
+            DomainName: !If ['InUSEastOne',
+              !Join ['', [!Ref GWMSSiteS3BucketName, '.s3.amazonaws.com']],
+              !Join ['', [!Ref GWMSSiteS3BucketName, '.s3-', !Ref 'AWS::Region', '.amazonaws.com']]]
+            S3OriginConfig:
+             OriginAccessIdentity: !Sub >-
+               origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+        ViewerCertificate:
+          AcmCertificateArn: !Ref CustomDomainNameAcmCertArn
+          SslSupportMethod: 'sni-only'
+
+  DefaultCloudfrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Condition: NoCustomDomainName
+    Properties:
+      DistributionConfig:
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 403
+            ResponsePagePath: '/index.html'
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId: 'gwms-frontend-s3-bucket'
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        Comment: !Sub '${AWS::StackName} distribution'
+        Origins:
+          - Id: 'gwms-frontend-s3-bucket'
+            DomainName: !If ['InUSEastOne',
+              !Join ['', [!Ref GWMSSiteS3BucketName, '.s3.amazonaws.com']],
+              !Join ['', [!Ref GWMSSiteS3BucketName, '.s3-', !Ref 'AWS::Region', '.amazonaws.com']]]
+            S3OriginConfig:
+             OriginAccessIdentity: !Sub >-
+               origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+
+  CustomDomainDistributionAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Condition: UseCustomDomainName
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub 'CloudFront OAI for ${CustomDomainName}'
+
+  CustomDomainHostedZone:
+    Type: AWS::Route53::HostedZone
+    Condition: UseRoute53
+    Properties:
+      Name: !Join [ '', [ !Ref CustomDomainName, '.' ] ]
+
+  CustomDomainRecordSet:
+    Type: AWS::Route53::RecordSetGroup
+    Condition: UseRoute53
+    Properties:
+      HostedZoneName: !Join [ '', [ !Ref CustomDomainName, '.' ] ]
+      RecordSets:
+        - Name: !Join [ '', [ !Ref CustomDomainName, '.' ] ]
+          Type: A
+          AliasTarget:
+            DNSName: !Join [ '', [ !GetAtt CustomDomainCloudfrontDistribution.DomainName, '.' ] ]
+            # this is a "magic string" for using CFN aliases; see this link:
+            # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget.html
+            HostedZoneId: 'Z2FDTNDATAQYW2'
+
+Outputs:
+  WebsiteURL:
+    Value: !If [ 'DevelopmentMode',
+      !Join [ '', [ 'https://', !GetAtt GWMSSiteS3Bucket.RegionalDomainName, '/index.html' ]],
+      !If [
+        'UseCustomDomainName',
+        !Join [ '', [ 'https://', !Ref CustomDomainName ]],
+        !Join [ '', [ 'https://', !GetAtt DefaultCloudfrontDistribution.DomainName ]]
+      ]
+    ]
+    Description: "CloudFront URL for website"
+
+  CustomWebsiteURL:
+    Condition: UseCustomDomainName
+    Value: !Ref CustomDomainName
+    Description: "Custom URL for website"

@@ -1,0 +1,33 @@
+<app-dropdown class="user-menu">
+    <ng-container dropdown-button>
+        <img
+            [src]="user.picture || 'assets/img/default-profile.png'"
+            class="user-image img-circle elevation-2"
+            alt="User Image"
+        />
+    </ng-container>
+    <ng-container dropdown-menu>
+        <li class="user-header bg-primary">
+            <img
+                [src]="user.picture || 'assets/img/default-profile.png'"
+                class="img-circle elevation-2"
+                alt="User Image"
+            />
+
+            <p>
+                <span>{{ user.email }}</span>
+                <small>
+                    <span>Member since&nbsp;</span>
+                    <span>{{ formatDate(user.createdAt) }}</span>
+                </small>
+            </p>
+        </li>
+
+        <!-- Menu Footer-->
+        <li class="user-footer">
+            <a (click)="logout()" class="btn btn-default btn-flat float-right"
+                >Sign out</a
+            >
+        </li>
+    </ng-container>
+</app-dropdown>
