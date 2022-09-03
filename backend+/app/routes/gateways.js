@@ -7,13 +7,15 @@ const {
   createGateway,
   getGateways,
   getGateway,
-  deleteGateway
+  deleteGateway,
+  updateGateway
 } = require('../controllers/gateways')
 
 const {
   validateCreateGateway,
   validateGetGateway,
-  validateDeleteGateway
+  validateDeleteGateway,
+  validateUpdateGateway
 } = require('../controllers/gateways/validators')
 
 /*
@@ -35,17 +37,10 @@ router.post('/', trimRequest.all, validateCreateGateway, createGateway)
  */
 router.get('/:id', trimRequest.all, validateGetGateway, getGateway)
 
-// /*
-//  * Update item route
-//  */
-// router.patch(
-//   '/:id',
-//   // requireAuth,
-//   // roleAuthorization(['admin']),
-//   trimRequest.all,
-//   validateUpdateUser,
-//   updateUser
-// )
+/*
+ * Update item route
+ */
+router.patch('/:id', trimRequest.all, validateUpdateGateway, updateGateway)
 
 /*
  * Delete item route
