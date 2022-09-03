@@ -3,12 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
-    // fixme get api details by intermediary api
-    api: {
-      baseurl: 'https://ttn0ktmc1k.execute-api.us-west-2.amazonaws.com/development/api/',
-      apikey: 'YFH7E44RQg41oCnm7oOw06Yk1RFVbBfG7cluG7NS'
-    }
+  production: false,
+  // fixme get api details by intermediary api
+  api: {
+    baseurl: 'http://localhost:3000',
+  },
 };
 
 /*

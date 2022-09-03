@@ -1,0 +1,19 @@
+<!-- <div class="d-flex flex-column align-items-end"></div> -->
+<div class="input-group input-group-lg">
+    <input
+        #search
+        type="search"
+        class="form-control col-md-2"
+        [placeholder]="placeholder"
+        (search)="onSearch(search.value)"
+    />
+    <div class="input-group-append">
+        <button
+            type="button"
+            class="btn btn-lg btn-default"
+            (click)="onSearch(search.value)"
+        >
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+</div>

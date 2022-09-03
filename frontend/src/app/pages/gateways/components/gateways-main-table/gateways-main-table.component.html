@@ -1,0 +1,17 @@
+<!-- {{ isLoadingData ? 'loading...' : '' }} -->
+
+<gateways-search
+    placeholder="Search..."
+    (search)="onSearch($event)"
+></gateways-search>
+
+<div class="info-box table-container">
+    <div class="info-box-content">
+        <ng2-smart-table [settings]="settings" [source]="source">
+        </ng2-smart-table>
+    </div>
+
+    <div *ngIf="isLoadingData" class="overlay">
+        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+</div>
