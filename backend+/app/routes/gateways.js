@@ -3,9 +3,16 @@ const router = express.Router()
 require('../../config/passport')
 const trimRequest = require('trim-request')
 
-const { createGateway, getGateways } = require('../controllers/gateways')
+const {
+  createGateway,
+  getGateways,
+  getGateway
+} = require('../controllers/gateways')
 
-const { validateCreateGateway } = require('../controllers/gateways/validators')
+const {
+  validateCreateGateway,
+  validateGetGateway
+} = require('../controllers/gateways/validators')
 
 /*
  * Gateways routes
@@ -14,28 +21,17 @@ const { validateCreateGateway } = require('../controllers/gateways/validators')
 /*
  * Get items route
  */
-router.get(
-  '/',
-  trimRequest.all,
-  getGateways
-)
+router.get('/', trimRequest.all, getGateways)
 
 /*
  * Create new item route
  */
 router.post('/', trimRequest.all, validateCreateGateway, createGateway)
 
-// /*
-//  * Get item route
-//  */
-// router.get(
-//   '/:id',
-//   // requireAuth,
-//   // roleAuthorization(['admin']),
-//   trimRequest.all,
-//   validateGetUser,
-//   getUser
-// )
+/*
+ * Get item route
+ */
+router.get('/:id', trimRequest.all, validateGetGateway, getGateway)
 
 // /*
 //  * Update item route
