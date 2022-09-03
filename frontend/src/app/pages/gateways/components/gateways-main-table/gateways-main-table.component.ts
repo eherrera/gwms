@@ -8,7 +8,9 @@ import { CustomServerDataSource } from '@services/custom-server-datasource';
   styleUrls: ['./gateways-main-table.component.css'],
 })
 export class GatewaysMainTableComponent implements OnInit {
+  NO_DATA_FOUND = 'No data found';
   settings = {
+    noDataMessage: this.NO_DATA_FOUND,
     pager: {
       display: true,
       perPage: 10,
@@ -42,14 +44,21 @@ export class GatewaysMainTableComponent implements OnInit {
     },
   };
 
+  serverError = null;
+
   source: CustomServerDataSource;
 
   public isLoadingData = false;
 
   constructor(private service: ApiService) {
     this.source = this.service.getGatewayDatasource();
-    this.source.onUpdateStarted().subscribe(() => {
+    this.source.onUpdateStarted().subscribe((promise: Promise<any>) => {
+      this.serverError = null;
       setTimeout(() => (this.isLoadingData = true));
+      promise.catch((error) => {
+        setTimeout(() => (this.isLoadingData = false));
+        this.serverError = 'Ups, something went wrong.';
+      });
     });
   }
 
