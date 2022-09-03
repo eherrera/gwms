@@ -35,7 +35,7 @@ export class GatewaysMainTableComponent implements OnInit {
         filter: false,
       },
       devices_count: {
-        title: 'Devices Count',
+        title: 'Devices',
         editable: false,
         filter: false,
       },
@@ -60,6 +60,16 @@ export class GatewaysMainTableComponent implements OnInit {
   }
 
   onSearch(query: string = '') {
-    console.log({ query });
+    if (typeof query === 'string') {
+      this.source.setFilter(
+        [
+          {
+            field: 'any',
+            search: query,
+          },
+        ],
+        true
+      );
+    }
   }
 }

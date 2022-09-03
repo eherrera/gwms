@@ -25,7 +25,7 @@ export class ApiService {
       pagerPageKey: 'page',
       totalKey: 'totalDocs',
 
-      endPoint: `${environment.api.baseurl}/gateways`,
+      endPoint: `${environment.api.baseurl}/gateways?&fields=name,serial_number,ipv4`,
     });
     return this.gatewaysDataSource;
   }
