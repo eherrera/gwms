@@ -35,6 +35,8 @@
     "core-js": "3.8.0",
     "gatekeeper-client-sdk": "0.4.2",
     "luxon": "2.4.0",
+    "ng2-completer": "^9.0.1",
+    "ng2-smart-table": "^1.7.2",
     "ngx-toastr": "14.3.0",
     "process": "0.11.10",
     "rxjs": "6.6.7",

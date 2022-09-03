@@ -39,6 +39,9 @@ import { uiReducer } from './store/ui/reducer';
 import { SelectComponent } from './components/select/select.component';
 import { CheckboxComponent } from './components/checkbox/checkbox.component';
 import { GatewaysComponent } from '@pages/gateways/gateways.component';
+import { GatewaysMainTableComponent } from '@pages/gateways/components/gateways-main-table/gateways-main-table.component';
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { GatewaysSearchComponent } from '@pages/gateways/components/gateways-search/gateways-search.component';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -71,6 +74,8 @@ registerLocaleData(localeEn, 'en-EN');
     SelectComponent,
     CheckboxComponent,
     GatewaysComponent,
+    GatewaysMainTableComponent,
+    GatewaysSearchComponent,
   ],
   imports: [
     BrowserModule,
@@ -79,6 +84,7 @@ registerLocaleData(localeEn, 'en-EN');
     AppRoutingModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    Ng2SmartTableModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',
