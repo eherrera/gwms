@@ -1,13 +1,13 @@
 require('dotenv-safe').config()
-import { Seeder } from 'mongo-seeding'
-import { resolve } from 'path'
+const { Seeder } = require('mongo-seeding')
+const path = require('path')
 const config = {
   database: process.env.MONGO_URI,
-  inputPath: resolve(__dirname, './data'),
+  inputPath: path.resolve(__dirname, './data'),
   dropDatabase: false
 }
 const seeder = new Seeder(config)
-const collections = seeder.readCollectionsFromPath(resolve('./data'))
+const collections = seeder.readCollectionsFromPath(path.resolve('./data'))
 
 const main = async () => {
   try {
