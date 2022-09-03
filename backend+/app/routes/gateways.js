@@ -1,6 +1,5 @@
 const express = require('express')
 const router = express.Router()
-require('../../config/passport')
 const trimRequest = require('trim-request')
 
 const {

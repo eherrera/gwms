@@ -5,7 +5,7 @@ const morgan = require('morgan')
 const compression = require('compression')
 const helmet = require('helmet')
 const cors = require('cors')
-const passport = require('passport')
+
 const app = express()
 const i18n = require('i18n')
 const initMongo = require('./config/mongo')
