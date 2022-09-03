@@ -6,12 +6,14 @@ const trimRequest = require('trim-request')
 const {
   createGateway,
   getGateways,
-  getGateway
+  getGateway,
+  deleteGateway
 } = require('../controllers/gateways')
 
 const {
   validateCreateGateway,
-  validateGetGateway
+  validateGetGateway,
+  validateDeleteGateway
 } = require('../controllers/gateways/validators')
 
 /*
@@ -45,16 +47,9 @@ router.get('/:id', trimRequest.all, validateGetGateway, getGateway)
 //   updateUser
 // )
 
-// /*
-//  * Delete item route
-//  */
-// router.delete(
-//   '/:id',
-//   // requireAuth,
-//   // roleAuthorization(['admin']),
-//   trimRequest.all,
-//   validateDeleteUser,
-//   deleteUser
-// )
+/*
+ * Delete item route
+ */
+router.delete('/:id', trimRequest.all, validateDeleteGateway, deleteGateway)
 
 module.exports = router
