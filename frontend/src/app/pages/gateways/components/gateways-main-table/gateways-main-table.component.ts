@@ -9,6 +9,10 @@ import { CustomServerDataSource } from '@services/custom-server-datasource';
 })
 export class GatewaysMainTableComponent implements OnInit {
   settings = {
+    pager: {
+      display: true,
+      perPage: 10,
+    },
     actions: {
       add: false,
       edit: false,

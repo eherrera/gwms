@@ -23,6 +23,7 @@ export class ApiService {
       sortDirKey: 'order',
       pagerLimitKey: 'limit',
       pagerPageKey: 'page',
+      totalKey: 'totalDocs',
 
       endPoint: `${environment.api.baseurl}/gateways`,
     });
