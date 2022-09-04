@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '@services/api.service';
 import { CustomServerDataSource } from '@services/custom-server-datasource';
 import { Router } from '@angular/router';
+import { DeleteResponse } from '@/models/gateway';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'gateways-main-table',
@@ -66,7 +68,11 @@ export class GatewaysMainTableComponent implements OnInit {
 
   public isLoadingData = false;
 
-  constructor(private service: ApiService, private router: Router) {
+  constructor(
+    private service: ApiService,
+    private router: Router,
+    private toastr: ToastrService
+  ) {
     this.source = this.service.getGatewayDatasource();
     this.source.onUpdateStarted().subscribe((promise: Promise<any>) => {
       this.serverError = null;
@@ -98,6 +104,24 @@ export class GatewaysMainTableComponent implements OnInit {
     }
   }
 
+  deleteGateway(id: string) {
+    if (confirm('Are you sure?') !== true) {
+      return;
+    }
+    this.service.deleteGateway(id).subscribe(
+      (response: DeleteResponse) => {
+        if (response && response.msg === 'DELETED') {
+          this.toastr.success(`Gateway deleted successfully!`);
+        }
+        this.onSearch();
+      },
+      (err) => {
+        console.log({ err });
+        this.toastr.error(`Error deleting Gateway`);
+      }
+    );
+  }
+
   onCustom(event) {
     console.log(
       `Custom event '${event.action}' fired on row №: ${event.data._id}`
@@ -110,6 +134,7 @@ export class GatewaysMainTableComponent implements OnInit {
         this.router.navigate([`/edit-gateway/${event.data._id}`]);
         break;
       case 'delete':
+        this.deleteGateway(event.data._id);
         break;
 
       default:
