@@ -44,6 +44,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { GatewaysSearchComponent } from '@pages/gateways/components/gateways-search/gateways-search.component';
 import { GatewayAddEditComponent } from '@pages/gateways/components/gateway-add-edit/gateway-add-edit.component';
 import { GatewayAddEditFormComponent } from '@pages/gateways/components/gateway-add-edit-form/gateway-add-edit-form.component';
+import { Ipv4ValidatorDirective } from './directives/ipv4.directive';
 
 registerLocaleData(localeEn, 'en-EN');
 
@@ -80,6 +81,7 @@ registerLocaleData(localeEn, 'en-EN');
     GatewaysSearchComponent,
     GatewayAddEditComponent,
     GatewayAddEditFormComponent,
+    Ipv4ValidatorDirective,
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import { Gateway } from '@/models/gateway';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { ipv4Validator } from '@/directives/ipv4.directive';
 
 @Component({
   selector: 'gateway-add-edit-form',
@@ -54,6 +55,7 @@ export class GatewayAddEditFormComponent implements OnInit {
     ]),
     ipv4: new FormControl({ value: '', disabled: false }, [
       Validators.required,
+      ipv4Validator()
     ]),
   });
 

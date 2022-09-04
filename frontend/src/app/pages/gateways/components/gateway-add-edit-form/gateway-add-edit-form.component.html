@@ -59,6 +59,7 @@
                         />
 
                         <span class="error invalid-feedback" *ngIf="ipv4.errors?.['required']">{{fields.ipv4}} is required</span>
+                        <span class="error invalid-feedback" *ngIf="ipv4.errors?.['ipv4']">{{fields.ipv4}} is not a valid ip v4</span>
 
                     </div>
                 </div>
