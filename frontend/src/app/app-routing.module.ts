@@ -9,6 +9,7 @@ import { ForgotPasswordComponent } from '@modules/forgot-password/forgot-passwor
 import { RecoverPasswordComponent } from '@modules/recover-password/recover-password.component';
 import { PrivacyPolicyComponent } from '@modules/privacy-policy/privacy-policy.component';
 import { GatewaysComponent } from '@pages/gateways/gateways.component';
+import { GatewayAddEditComponent } from '@pages/gateways/components/gateway-add-edit/gateway-add-edit.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,10 @@ const routes: Routes = [
       {
         path: '',
         component: GatewaysComponent,
+      },
+      {
+        path: 'add-gateway',
+        component: GatewayAddEditComponent,
       },
     ],
   },

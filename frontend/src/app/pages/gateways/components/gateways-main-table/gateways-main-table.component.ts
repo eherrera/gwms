@@ -32,7 +32,7 @@ export class GatewaysMainTableComponent implements OnInit {
         filter: false,
       },
       ipv4: {
-        title: 'IPv4',
+        title: 'IP',
         editable: false,
         filter: false,
       },

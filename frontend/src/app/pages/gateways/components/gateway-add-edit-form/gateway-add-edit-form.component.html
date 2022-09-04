@@ -1,0 +1,48 @@
+<div class="info-box table-container">
+    <div class="info-box-content">
+        <form [formGroup]="gatewayForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="serialNumber">Serial number: </label>
+                        <input
+                            id="serialNumber"
+                            type="text"
+                            class="form-control"
+                            formControlName="serialNumber"
+                        />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="name">Name: </label>
+                        <input
+                            id="name"
+                            type="text"
+                            class="form-control"
+                            formControlName="name"
+                        />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="ipv4">IP v4: </label>
+                        <input
+                            id="ipv4"
+                            type="text"
+                            class="form-control"
+                            formControlName="ipv4"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="submit" class="btn btn-default" [routerLink]="['/']">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary float-right">
+                    Save
+                </button>
+            </div>
+        </form>
+        <div *ngIf="loading" class="overlay">
+            <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+        </div>
+    </div>
+</div>
