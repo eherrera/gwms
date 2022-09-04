@@ -99,9 +99,9 @@
                 <div class="card devices-container">
                     <div class="card-header ui-sortable-handle">
                         <h3 class="card-title">
-                            Peripheral devices |
-                            <span class="text-rigth"
-                                ><a
+                            Peripheral devices
+                            <span class="text-rigth" [hidden]="crudMode == CrudModeView.Details || loading"
+                                > | <a
                                     href="javascript:void(0)"
                                     (click)="addDeviceControl()"
                                     >Add</a
@@ -209,6 +209,7 @@
                                                     <span
                                                         ><a
                                                             href="javascript:void(0)"
+                                                            [hidden]="crudMode == CrudModeView.Details"
                                                             (click)="
                                                                 removeDeviceControl(
                                                                     index
@@ -229,7 +230,7 @@
 
                 <!-- end devices -->
             </div>
-            <div class="card-footer">
+            <div class="card-footer" [hidden]="crudMode == CrudModeView.Details">
                 <button
                     type="button"
                     [disabled]="loading"
@@ -241,7 +242,7 @@
                 <button
                     type="submit"
                     class="btn btn-primary float-right"
-                    [disabled]="!gatewayForm.valid"
+                    [disabled]="!gatewayForm.valid || loading"
                 >
                     Save
                 </button>

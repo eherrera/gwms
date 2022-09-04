@@ -5,6 +5,14 @@ export class Gateway {
   ipv4: string;
   createdAt?: string;
   updatedAt?: string;
-  devices?: Array<any>;
+  devices?: Array<Device>;
   devices_count?: number;
+}
+
+export class Device {
+  created?: string;
+  status?: boolean;
+  uid?: string;
+  vendor?: string;
+  _id?: string;
 }

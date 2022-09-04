@@ -1,12 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { ApiService } from '@services/api.service';
-import { Gateway } from '@/models/gateway';
+import { Gateway, Device } from '@/models/gateway';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { ipv4Validator } from '@/directives/ipv4.directive';
 import { FormBuilder } from '@angular/forms';
+import { CrudModeView } from '@/models/crud';
 
 @Component({
   selector: 'gateway-add-edit-form',
@@ -14,8 +15,12 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./gateway-add-edit-form.component.css'],
 })
 export class GatewayAddEditFormComponent implements OnInit {
-  @Input() add = true;
+  CrudModeView = CrudModeView;
+  @Input() crudMode: CrudModeView = CrudModeView.Add;
+  @Input() id: string;
   loading = false;
+
+  gateway: Gateway;
 
   globalErrors = [];
 
@@ -68,18 +73,20 @@ export class GatewayAddEditFormComponent implements OnInit {
     // ...
   };
 
-  newDevice(): FormGroup {
+  newDevice(device?: Device): FormGroup {
     return this.fb.group({
-      uid: new FormControl('', [
+      uid: new FormControl(device ? device.uid : '', [
         Validators.required,
         Validators.pattern('^[0-9]*$'),
       ]),
-      vendor: new FormControl('', [
+      vendor: new FormControl(device ? device.vendor : '', [
         Validators.required,
         Validators.maxLength(24),
       ]),
-      created: new FormControl('', [Validators.required]),
-      status: new FormControl(true),
+      created: new FormControl(device ? device.created : '', [
+        Validators.required,
+      ]),
+      status: new FormControl(device ? device.status : true),
     });
   }
 
@@ -110,11 +117,57 @@ export class GatewayAddEditFormComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.id) {
+      this.setLoading();
+      this.service.getGateway(this.id).subscribe(
+        (gateway: Gateway) => {
+          this.gateway = gateway;
+          this.fillGatewayForm();
+          this.resetState();
+        },
+        (err) => {
+          this.toastr.error('Error loading gateway');
+          this.resetState();
+        }
+      );
+    }
+  }
+
+  fillGatewayForm = () => {
+    if (!this.gateway) {
+      return;
+    }
+    console.log({ gateway: this.gateway });
+    this.serialNumber.setValue(this.gateway.serial_number);
+    this.name.setValue(this.gateway.name);
+    this.ipv4.setValue(this.gateway.ipv4);
+    if (!this.gateway.devices) {
+      return;
+    }
+    this.gateway.devices.forEach((device) => {
+      try {
+        device.created = device.created.split('T')[0];
+      } catch (error) {
+        console.log(error);
+      }
+
+      this.addDeviceControl(device);
+    });
+  };
+
+  setLoading = () => {
+    this.loading = true;
+    this.gatewayForm.disable();
+  };
 
   resetState = (res?: any) => {
     this.loading = false;
-    this.gatewayForm.enable();
+    if (this.crudMode != CrudModeView.Details) {
+      this.gatewayForm.enable();
+    } else {
+      this.gatewayForm.disable();
+    }
   };
 
   processServerErrors = (err: HttpErrorResponse) => {
@@ -177,7 +230,7 @@ export class GatewayAddEditFormComponent implements OnInit {
       return;
     }
 
-    if (this.add) {
+    if (this.crudMode == CrudModeView.Add) {
       this.service
         .postGateway({
           serial_number: this.gatewayForm.value.serialNumber,
@@ -198,10 +251,33 @@ export class GatewayAddEditFormComponent implements OnInit {
           }
         );
     }
+
+    if (this.crudMode == CrudModeView.Edit) {
+      this.service
+        .patchGateway({
+          serial_number: this.gatewayForm.value.serialNumber,
+          name: this.gatewayForm.value.name,
+          ipv4: this.gatewayForm.value.ipv4,
+          devices: this.gatewayForm.value.devices,
+          _id: this.gateway._id,
+        })
+        .subscribe(
+          (gateway: Gateway) => {
+            this.resetState(gateway);
+            this.toastr.success('Gateway was saved successfully!');
+            this.router.navigate(['/']);
+          },
+          (err: HttpErrorResponse) => {
+            this.resetState(err);
+            this.toastr.error('Form is not valid!');
+            this.processServerErrors(err);
+          }
+        );
+    }
   }
 
-  addDeviceControl() {
-    this.devices().push(this.newDevice());
+  addDeviceControl(device?: Device) {
+    this.devices().push(this.newDevice(device));
   }
 
   removeDeviceControl(i: number) {

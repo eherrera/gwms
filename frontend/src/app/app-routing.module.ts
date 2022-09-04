@@ -26,6 +26,14 @@ const routes: Routes = [
         path: 'add-gateway',
         component: GatewayAddEditComponent,
       },
+      {
+        path: 'edit-gateway/:id',
+        component: GatewayAddEditComponent,
+      },
+      {
+        path: 'gateway-details/:id',
+        component: GatewayAddEditComponent,
+      },
     ],
   },
   {
