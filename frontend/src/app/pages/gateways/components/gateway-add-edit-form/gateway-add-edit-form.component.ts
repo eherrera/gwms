@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { ipv4Validator } from '@/directives/ipv4.directive';
 import { FormBuilder } from '@angular/forms';
+import { CrudModeView } from '@/models/crud';
 
 @Component({
   selector: 'gateway-add-edit-form',
@@ -14,7 +15,8 @@ import { FormBuilder } from '@angular/forms';
   styleUrls: ['./gateway-add-edit-form.component.css'],
 })
 export class GatewayAddEditFormComponent implements OnInit {
-  @Input() add = true;
+  CrudModeView = CrudModeView;
+  @Input() crudMode: CrudModeView = CrudModeView.Add;
   loading = false;
 
   globalErrors = [];
@@ -110,7 +112,11 @@ export class GatewayAddEditFormComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.crudMode == CrudModeView.Details) {
+      this.gatewayForm.disable();
+    }
+  }
 
   resetState = (res?: any) => {
     this.loading = false;
@@ -177,7 +183,7 @@ export class GatewayAddEditFormComponent implements OnInit {
       return;
     }
 
-    if (this.add) {
+    if (this.crudMode == CrudModeView.Add) {
       this.service
         .postGateway({
           serial_number: this.gatewayForm.value.serialNumber,

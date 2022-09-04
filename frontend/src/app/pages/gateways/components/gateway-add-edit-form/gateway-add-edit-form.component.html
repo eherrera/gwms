@@ -99,9 +99,9 @@
                 <div class="card devices-container">
                     <div class="card-header ui-sortable-handle">
                         <h3 class="card-title">
-                            Peripheral devices |
-                            <span class="text-rigth"
-                                ><a
+                            Peripheral devices
+                            <span class="text-rigth" [hidden]="crudMode == CrudModeView.Details"
+                                > | <a
                                     href="javascript:void(0)"
                                     (click)="addDeviceControl()"
                                     >Add</a
@@ -229,7 +229,7 @@
 
                 <!-- end devices -->
             </div>
-            <div class="card-footer">
+            <div class="card-footer" [hidden]="crudMode == CrudModeView.Details">
                 <button
                     type="button"
                     [disabled]="loading"

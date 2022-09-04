@@ -3,7 +3,15 @@
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0 text-dark">
-                    {{ add ? 'Add' : 'Edit' }} Gateway
+                    {{
+                        crudMode == CrudModeView.Add
+                            ? 'Add'
+                            : crudMode == CrudModeView.Edit
+                            ? 'Edit'
+                            : ''
+                    }}
+                    Gateway
+                    {{ crudMode == CrudModeView.Details ? 'details' : '' }}
                 </h1>
             </div>
             <!-- /.col -->
@@ -16,7 +24,15 @@
                         <a [routerLink]="['/']">Gateways</a>
                     </li>
                     <li class="breadcrumb-item">
-                        {{ add ? 'Add' : 'Edit' }} Gateway
+                        {{
+                            crudMode == CrudModeView.Add
+                                ? 'Add'
+                                : crudMode == CrudModeView.Edit
+                                ? 'Edit'
+                                : ''
+                        }}
+                        Gateway
+                        {{ crudMode == CrudModeView.Details ? 'details' : '' }}
                     </li>
                 </ol>
             </div>
@@ -31,7 +47,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-        <gateway-add-edit-form [add]="add"></gateway-add-edit-form>
+        <gateway-add-edit-form [crudMode]="crudMode"></gateway-add-edit-form>
     </div>
     <!-- Main row -->
 </section>
