@@ -1,5 +1,21 @@
 <div class="info-box table-container">
     <div class="info-box-content">
+        <!-- server errors box -->
+        <div
+            *ngIf="serverErrors.length > 0"
+            class="card card-danger card-outline"
+        >
+            <div class="card-body">
+                <h5 class="card-title">Server errors</h5>
+
+                <div class="card-text">
+                    <ul>
+                        <li *ngFor="let item of serverErrors">{{ item }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- server errors box end -->
         <form [formGroup]="gatewayForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
                 <div class="row">
@@ -33,7 +49,11 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-default" [routerLink]="['/']">
+                <button
+                    type="submit"
+                    class="btn btn-default"
+                    [routerLink]="['/']"
+                >
                     Cancel
                 </button>
                 <button type="submit" class="btn btn-primary float-right">
