@@ -68,4 +68,10 @@ export class ApiService {
       headers: this.headers,
     }) as Observable<Gateway>;
   }
+
+  deleteGateway(id: string): Observable<any> {
+    return this.http.delete(`${environment.api.baseurl}/gateways/${id}`, {
+      headers: this.headers,
+    }) as Observable<any>;
+  }
 }

@@ -16,3 +16,7 @@ export class Device {
   vendor?: string;
   _id?: string;
 }
+
+export class DeleteResponse {
+  msg: string;
+}
