@@ -251,6 +251,29 @@ export class GatewayAddEditFormComponent implements OnInit {
           }
         );
     }
+
+    if (this.crudMode == CrudModeView.Edit) {
+      this.service
+        .patchGateway({
+          serial_number: this.gatewayForm.value.serialNumber,
+          name: this.gatewayForm.value.name,
+          ipv4: this.gatewayForm.value.ipv4,
+          devices: this.gatewayForm.value.devices,
+          _id: this.gateway._id,
+        })
+        .subscribe(
+          (gateway: Gateway) => {
+            this.resetState(gateway);
+            this.toastr.success('Gateway was saved successfully!');
+            this.router.navigate(['/']);
+          },
+          (err: HttpErrorResponse) => {
+            this.resetState(err);
+            this.toastr.error('Form is not valid!');
+            this.processServerErrors(err);
+          }
+        );
+    }
   }
 
   addDeviceControl(device?: Device) {
