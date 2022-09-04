@@ -3,6 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ApiService } from '@services/api.service';
 import { Gateway } from '@/models/gateway';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gateway-add-edit-form',
@@ -23,7 +25,11 @@ export class GatewayAddEditFormComponent implements OnInit {
     name: new FormControl({ value: '', disabled: false }, Validators.required),
     ipv4: new FormControl({ value: '', disabled: false }, Validators.required),
   });
-  constructor(private service: ApiService) {}
+  constructor(
+    private service: ApiService,
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   ngOnInit() {}
 
@@ -84,9 +90,12 @@ export class GatewayAddEditFormComponent implements OnInit {
         .subscribe(
           (gateway: Gateway) => {
             this.resetState(gateway);
+            this.toastr.success('Gateway was saved successfully!');
+            this.router.navigate(['/']);
           },
           (err: HttpErrorResponse) => {
             this.resetState(err);
+            this.toastr.error('Form is not valid!');
             this.processServerErrors(err);
           }
         );
