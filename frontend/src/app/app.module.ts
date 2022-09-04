@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from '@/app-routing.module';
@@ -9,12 +9,12 @@ import { LoginComponent } from '@modules/login/login.component';
 import { HeaderComponent } from '@modules/main/header/header.component';
 import { FooterComponent } from '@modules/main/footer/footer.component';
 import { MenuSidebarComponent } from '@modules/main/menu-sidebar/menu-sidebar.component';
-import { BlankComponent } from '@pages/blank/blank.component';
+
 import { ReactiveFormsModule } from '@angular/forms';
-import { ProfileComponent } from '@pages/profile/profile.component';
+
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegisterComponent } from '@modules/register/register.component';
-import { DashboardComponent } from '@pages/dashboard/dashboard.component';
+
 import { ToastrModule } from 'ngx-toastr';
 import { MessagesComponent } from '@modules/main/header/messages/messages.component';
 import { NotificationsComponent } from '@modules/main/header/notifications/notifications.component';
@@ -27,8 +27,7 @@ import { ForgotPasswordComponent } from '@modules/forgot-password/forgot-passwor
 import { RecoverPasswordComponent } from '@modules/recover-password/recover-password.component';
 import { LanguageComponent } from '@modules/main/header/language/language.component';
 import { PrivacyPolicyComponent } from './modules/privacy-policy/privacy-policy.component';
-import { MainMenuComponent } from './pages/main-menu/main-menu.component';
-import { SubMenuComponent } from './pages/main-menu/sub-menu/sub-menu.component';
+
 import { MenuItemComponent } from './components/menu-item/menu-item.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
 import { DropdownMenuComponent } from './components/dropdown/dropdown-menu/dropdown-menu.component';
@@ -56,10 +55,7 @@ registerLocaleData(localeEn, 'en-EN');
     HeaderComponent,
     FooterComponent,
     MenuSidebarComponent,
-    BlankComponent,
-    ProfileComponent,
     RegisterComponent,
-    DashboardComponent,
     MessagesComponent,
     NotificationsComponent,
     ButtonComponent,
@@ -68,8 +64,6 @@ registerLocaleData(localeEn, 'en-EN');
     RecoverPasswordComponent,
     LanguageComponent,
     PrivacyPolicyComponent,
-    MainMenuComponent,
-    SubMenuComponent,
     MenuItemComponent,
     DropdownComponent,
     DropdownMenuComponent,
@@ -83,6 +77,7 @@ registerLocaleData(localeEn, 'en-EN');
     GatewayAddEditFormComponent,
     Ipv4ValidatorDirective,
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
     BrowserModule,
     StoreModule.forRoot({ auth: authReducer, ui: uiReducer }),
