@@ -46,4 +46,10 @@ export class ApiService {
       headers: this.headers,
     }) as Observable<Gateway>;
   }
+
+  getGateway(id: string): Observable<Gateway> {
+    return this.http.get(`${environment.api.baseurl}/gateways/${id}`, {
+      headers: this.headers,
+    }) as Observable<Gateway>;
+  }
 }

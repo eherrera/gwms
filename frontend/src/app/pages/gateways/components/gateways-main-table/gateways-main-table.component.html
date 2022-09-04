@@ -7,7 +7,7 @@
 
 <div class="info-box table-container">
     <div class="info-box-content">
-        <ng2-smart-table [settings]="settings" [source]="source">
+        <ng2-smart-table [settings]="settings" [source]="source" (custom)="onCustom($event)">
         </ng2-smart-table>
     </div>
 

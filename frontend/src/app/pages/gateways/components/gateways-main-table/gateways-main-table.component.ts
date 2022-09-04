@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '@services/api.service';
 import { CustomServerDataSource } from '@services/custom-server-datasource';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'gateways-main-table',
@@ -16,8 +17,23 @@ export class GatewaysMainTableComponent implements OnInit {
       perPage: 10,
     },
     actions: {
-      add: false,
+      delete: false,
       edit: false,
+      add: false,
+      custom: [
+        {
+          name: 'details',
+          title: 'Details ',
+        },
+        {
+          name: 'edit',
+          title: 'Edit ',
+        },
+        {
+          name: 'delete',
+          title: 'Delete ',
+        },
+      ],
       position: 'right',
     },
     columns: {
@@ -50,7 +66,7 @@ export class GatewaysMainTableComponent implements OnInit {
 
   public isLoadingData = false;
 
-  constructor(private service: ApiService) {
+  constructor(private service: ApiService, private router: Router) {
     this.source = this.service.getGatewayDatasource();
     this.source.onUpdateStarted().subscribe((promise: Promise<any>) => {
       this.serverError = null;
@@ -79,6 +95,25 @@ export class GatewaysMainTableComponent implements OnInit {
         ],
         true
       );
+    }
+  }
+
+  onCustom(event) {
+    console.log(
+      `Custom event '${event.action}' fired on row №: ${event.data._id}`
+    );
+    switch (event.action) {
+      case 'details':
+        this.router.navigate([`/gateway-details/${event.data._id}`]);
+        break;
+      case 'edit':
+        this.router.navigate([`/edit-gateway/${event.data._id}`]);
+        break;
+      case 'delete':
+        break;
+
+      default:
+        break;
     }
   }
 }
