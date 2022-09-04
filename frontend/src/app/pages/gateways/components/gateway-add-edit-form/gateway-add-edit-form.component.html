@@ -2,15 +2,15 @@
     <div class="info-box-content">
         <!-- server errors box -->
         <div
-            *ngIf="serverErrors.length > 0"
+            *ngIf="globalErrors.length > 0"
             class="card card-danger card-outline"
         >
             <div class="card-body">
-                <h5 class="card-title">Server errors</h5>
+                <h5 class="card-title">Errors</h5>
 
                 <div class="card-text">
                     <ul>
-                        <li *ngFor="let item of serverErrors">{{ item }}</li>
+                        <li *ngFor="let item of globalErrors">{{ item }}</li>
                     </ul>
                 </div>
             </div>
@@ -26,14 +26,25 @@
                         <input
                             id="serialNumber"
                             type="text"
-                            [class.is-invalid]="serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)"
+                            [class.is-invalid]="
+                                serialNumber.invalid &&
+                                (serialNumber.dirty || serialNumber.touched)
+                            "
                             class="form-control"
                             formControlName="serialNumber"
                         />
 
-                        <span class="error invalid-feedback" *ngIf="serialNumber.errors?.['required']">{{fields.serialNumber}} is required</span>
-                        <span class="error invalid-feedback" *ngIf="serialNumber.errors?.['maxlength']">{{fields.serialNumber}} must have not more than 24 characters</span>
-
+                        <span
+                            class="error invalid-feedback"
+                            *ngIf="serialNumber.errors?.['required']"
+                            >{{ fields.serialNumber }} is required</span
+                        >
+                        <span
+                            class="error invalid-feedback"
+                            *ngIf="serialNumber.errors?.['maxlength']"
+                            >{{ fields.serialNumber }} must have not more than
+                            24 characters</span
+                        >
                     </div>
                     <div class="col-md-4">
                         <label for="name">{{ fields.name }}: </label>
@@ -41,32 +52,186 @@
                             id="name"
                             type="text"
                             class="form-control"
-                            [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
+                            [class.is-invalid]="
+                                name.invalid && (name.dirty || name.touched)
+                            "
                             formControlName="name"
                         />
 
-                        <span class="error invalid-feedback" *ngIf="name.errors?.['required']">{{fields.name}} is required</span>
-                        <span class="error invalid-feedback" *ngIf="name.errors?.['maxlength']">{{fields.name}} must have not more than 24 characters</span>
+                        <span
+                            class="error invalid-feedback"
+                            *ngIf="name.errors?.['required']"
+                            >{{ fields.name }} is required</span
+                        >
+                        <span
+                            class="error invalid-feedback"
+                            *ngIf="name.errors?.['maxlength']"
+                            >{{ fields.name }} must have not more than 24
+                            characters</span
+                        >
                     </div>
                     <div class="col-md-4">
                         <label for="ipv4">{{ fields.ipv4 }}: </label>
                         <input
                             id="ipv4"
                             type="text"
-                            [class.is-invalid]="ipv4.invalid && (ipv4.dirty || ipv4.touched)"
+                            [class.is-invalid]="
+                                ipv4.invalid && (ipv4.dirty || ipv4.touched)
+                            "
                             class="form-control"
                             formControlName="ipv4"
                         />
 
-                        <span class="error invalid-feedback" *ngIf="ipv4.errors?.['required']">{{fields.ipv4}} is required</span>
-                        <span class="error invalid-feedback" *ngIf="ipv4.errors?.['ipv4']">{{fields.ipv4}} is not a valid ip v4</span>
-
+                        <span
+                            class="error invalid-feedback"
+                            *ngIf="ipv4.errors?.['required']"
+                            >{{ fields.ipv4 }} is required</span
+                        >
+                        <span
+                            class="error invalid-feedback"
+                            *ngIf="ipv4.errors?.['ipv4']"
+                            >{{ fields.ipv4 }} is not a valid ip v4</span
+                        >
                     </div>
                 </div>
+                <!-- devices -->
+
+                <div class="card devices-container">
+                    <div class="card-header ui-sortable-handle">
+                        <h3 class="card-title">
+                            Peripheral devices |
+                            <span class="text-rigth"
+                                ><a
+                                    href="javascript:void(0)"
+                                    (click)="addDeviceControl()"
+                                    >Add</a
+                                ></span
+                            >
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+                        <ng-container formArrayName="devices">
+                            <ng-container
+                                *ngFor="
+                                    let device of devices().controls;
+                                    let index = index
+                                "
+                            >
+                                <div
+                                    class="row device-row"
+                                    [formGroupName]="index"
+                                >
+                                    <div class="col-md-3">
+                                        <input
+                                            type="number"
+                                            [placeholder]="fields.uid"
+                                            [class.is-invalid]="
+                                                uid(index).invalid &&
+                                                (uid(index).dirty ||
+                                                    uid(index).touched)
+                                            "
+                                            class="form-control"
+                                            formControlName="uid"
+                                        />
+                                        <span
+                                            class="error invalid-feedback"
+                                            *ngIf="uid(index).errors?.['required']"
+                                            >{{ fields.uid }} is required</span
+                                        >
+                                        <span
+                                            class="error invalid-feedback"
+                                            *ngIf="uid(index).errors?.['pattern']"
+                                            >{{ fields.uid }} must be an integer
+                                            number</span
+                                        >
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input
+                                            type="text"
+                                            [placeholder]="fields.vendor"
+                                            [class.is-invalid]="
+                                                vendor(index).invalid &&
+                                                (vendor(index).dirty ||
+                                                    vendor(index).touched)
+                                            "
+                                            class="form-control"
+                                            formControlName="vendor"
+                                        />
+                                        <span
+                                            class="error invalid-feedback"
+                                            *ngIf="vendor(index).errors?.['required']"
+                                            >{{ fields.vendor }} is required</span
+                                        >
+                                        <span
+                                            class="error invalid-feedback"
+                                            *ngIf="vendor(index).errors?.['maxlength']"
+                                            >{{ fields.vendor }} must have not
+                                            more than 24 characters</span
+                                        >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <input
+                                            type="date"
+                                            [placeholder]="fields.created"
+                                            [max]="now"
+                                            [class.is-invalid]="
+                                                created(index).invalid &&
+                                                (created(index).dirty ||
+                                                created(index).touched)
+                                            "
+                                            class="form-control"
+                                            formControlName="created"
+                                        />
+                                        <span
+                                            class="error invalid-feedback"
+                                            *ngIf="created(index).errors?.['required']"
+                                            >{{ fields.created }} is required</span
+                                        >
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group clearfix">
+                                            <div
+                                                class="icheck-primary d-inline"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    [id]="'cb' + index"
+                                                    formControlName="status"
+                                                    checked
+                                                />
+                                                <label [for]="'cb' + index">{{
+                                                    fields.statusOnline
+                                                }}</label>
+                                                <label>
+                                                    <span
+                                                        ><a
+                                                            href="javascript:void(0)"
+                                                            (click)="
+                                                                removeDeviceControl(
+                                                                    index
+                                                                )
+                                                            "
+                                                            >Remove</a
+                                                        ></span
+                                                    >
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <!-- end devices -->
             </div>
             <div class="card-footer">
                 <button
-                    type="submit"
+                    type="button"
                     [disabled]="loading"
                     class="btn btn-default"
                     [routerLink]="['/']"

@@ -1,11 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { ApiService } from '@services/api.service';
 import { Gateway } from '@/models/gateway';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { ipv4Validator } from '@/directives/ipv4.directive';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'gateway-add-edit-form',
@@ -16,12 +17,19 @@ export class GatewayAddEditFormComponent implements OnInit {
   @Input() add = true;
   loading = false;
 
-  serverErrors = [];
+  globalErrors = [];
+
+  maxDevices = 10;
 
   fields = {
     name: 'Name',
     serialNumber: 'Serial number',
     ipv4: 'IP v4',
+    uid: 'Uid',
+    vendor: 'Vendor',
+    created: 'Created',
+    status: 'Status',
+    statusOnline: 'Online',
   };
 
   get serialNumber() {
@@ -36,6 +44,22 @@ export class GatewayAddEditFormComponent implements OnInit {
     return this.gatewayForm.get('ipv4');
   }
 
+  uid(index: number) {
+    return this.devices().get(`${index}`).get('uid');
+  }
+
+  vendor(index: number) {
+    return this.devices().get(`${index}`).get('vendor');
+  }
+
+  created(index: number) {
+    return this.devices().get(`${index}`).get('created');
+  }
+
+  get now() {
+    return new Date().toISOString().split('T')[0];
+  }
+
   errors = {
     IS_EMPTY: 'is empty',
     NOT_A_VALID_IP: 'is not a valid ip v4',
@@ -43,6 +67,21 @@ export class GatewayAddEditFormComponent implements OnInit {
       'Gateway with the same serial number already exists',
     // ...
   };
+
+  newDevice(): FormGroup {
+    return this.fb.group({
+      uid: new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[0-9]*$'),
+      ]),
+      vendor: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(24),
+      ]),
+      created: new FormControl('', [Validators.required]),
+      status: new FormControl(true),
+    });
+  }
 
   gatewayForm = new FormGroup({
     serialNumber: new FormControl({ value: '', disabled: false }, [
@@ -55,26 +94,31 @@ export class GatewayAddEditFormComponent implements OnInit {
     ]),
     ipv4: new FormControl({ value: '', disabled: false }, [
       Validators.required,
-      ipv4Validator()
+      ipv4Validator(),
     ]),
+    devices: this.fb.array([]),
   });
+
+  devices(): FormArray {
+    return this.gatewayForm.get('devices') as FormArray;
+  }
 
   constructor(
     private service: ApiService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private fb: FormBuilder
   ) {}
 
   ngOnInit() {}
 
-  resetState = (res: any) => {
-    console.log({ res });
+  resetState = (res?: any) => {
     this.loading = false;
     this.gatewayForm.enable();
   };
 
   processServerErrors = (err: HttpErrorResponse) => {
-    this.serverErrors = [];
+    this.globalErrors = [];
     const displayName = (param: string, dict: object) => {
       if (dict[param]) {
         return dict[param];
@@ -87,7 +131,7 @@ export class GatewayAddEditFormComponent implements OnInit {
 
     if (typeof err.error.errors.msg === 'string') {
       const readableErrMsg = displayName(err.error.errors.msg, this.errors);
-      this.serverErrors.push(readableErrMsg);
+      this.globalErrors.push(readableErrMsg);
       return;
     }
 
@@ -96,7 +140,7 @@ export class GatewayAddEditFormComponent implements OnInit {
     }
 
     err.error.errors.msg.forEach((e) => {
-      this.serverErrors.push(
+      this.globalErrors.push(
         `${displayName(e.param, this.fields)} ${displayName(
           e.msg,
           this.errors
@@ -105,14 +149,33 @@ export class GatewayAddEditFormComponent implements OnInit {
     });
   };
 
+  validateDevicesSubmit() {
+    var deviceCount = this.gatewayForm.value.devices.length;
+    if (this.maxDevices < deviceCount) {
+      this.globalErrors.push(
+        `No more that ${this.maxDevices} peripheral devices are allowed for a gateway.`
+      );
+      return false;
+    }
+    return true;
+  }
+
   onSubmit() {
     if (!this.gatewayForm.valid) {
       return;
     }
 
+    // console.log(this.gatewayForm.value);
+
     this.loading = true;
-    this.serverErrors = [];
+    this.globalErrors = [];
     this.gatewayForm.disable();
+
+    var ok = this.validateDevicesSubmit();
+    if (!ok) {
+      this.resetState();
+      return;
+    }
 
     if (this.add) {
       this.service
@@ -120,6 +183,7 @@ export class GatewayAddEditFormComponent implements OnInit {
           serial_number: this.gatewayForm.value.serialNumber,
           name: this.gatewayForm.value.name,
           ipv4: this.gatewayForm.value.ipv4,
+          devices: this.gatewayForm.value.devices,
         })
         .subscribe(
           (gateway: Gateway) => {
@@ -134,5 +198,13 @@ export class GatewayAddEditFormComponent implements OnInit {
           }
         );
     }
+  }
+
+  addDeviceControl() {
+    this.devices().push(this.newDevice());
+  }
+
+  removeDeviceControl(i: number) {
+    this.devices().removeAt(i);
   }
 }

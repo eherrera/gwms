@@ -39,7 +39,8 @@ export class ApiService {
     const body = new HttpParams()
       .set('serialNumber', gateway.serial_number)
       .set('name', gateway.name)
-      .set('ipv4', gateway.ipv4);
+      .set('ipv4', gateway.ipv4)
+      .set('devices', JSON.stringify(gateway.devices));
 
     return this.http.post(`${environment.api.baseurl}/gateways`, body, {
       headers: this.headers,
