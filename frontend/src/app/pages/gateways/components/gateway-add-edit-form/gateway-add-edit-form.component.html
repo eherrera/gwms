@@ -26,9 +26,14 @@
                         <input
                             id="serialNumber"
                             type="text"
+                            [class.is-invalid]="serialNumber.invalid && (serialNumber.dirty || serialNumber.touched)"
                             class="form-control"
                             formControlName="serialNumber"
                         />
+
+                        <span class="error invalid-feedback" *ngIf="serialNumber.errors?.['required']">{{fields.serialNumber}} is required</span>
+                        <span class="error invalid-feedback" *ngIf="serialNumber.errors?.['maxlength']">{{fields.serialNumber}} must have not more than 24 characters</span>
+
                     </div>
                     <div class="col-md-4">
                         <label for="name">{{ fields.name }}: </label>
@@ -36,17 +41,25 @@
                             id="name"
                             type="text"
                             class="form-control"
+                            [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
                             formControlName="name"
                         />
+
+                        <span class="error invalid-feedback" *ngIf="name.errors?.['required']">{{fields.name}} is required</span>
+                        <span class="error invalid-feedback" *ngIf="name.errors?.['maxlength']">{{fields.name}} must have not more than 24 characters</span>
                     </div>
                     <div class="col-md-4">
                         <label for="ipv4">{{ fields.ipv4 }}: </label>
                         <input
                             id="ipv4"
                             type="text"
+                            [class.is-invalid]="ipv4.invalid && (ipv4.dirty || ipv4.touched)"
                             class="form-control"
                             formControlName="ipv4"
                         />
+
+                        <span class="error invalid-feedback" *ngIf="ipv4.errors?.['required']">{{fields.ipv4}} is required</span>
+
                     </div>
                 </div>
             </div>

@@ -23,6 +23,18 @@ export class GatewayAddEditFormComponent implements OnInit {
     ipv4: 'IP v4',
   };
 
+  get serialNumber() {
+    return this.gatewayForm.get('serialNumber');
+  }
+
+  get name() {
+    return this.gatewayForm.get('name');
+  }
+
+  get ipv4() {
+    return this.gatewayForm.get('ipv4');
+  }
+
   errors = {
     IS_EMPTY: 'is empty',
     NOT_A_VALID_IP: 'is not a valid ip v4',
@@ -32,13 +44,19 @@ export class GatewayAddEditFormComponent implements OnInit {
   };
 
   gatewayForm = new FormGroup({
-    serialNumber: new FormControl(
-      { value: '', disabled: false },
-      Validators.required
-    ),
-    name: new FormControl({ value: '', disabled: false }, Validators.required),
-    ipv4: new FormControl({ value: '', disabled: false }, Validators.required),
+    serialNumber: new FormControl({ value: '', disabled: false }, [
+      Validators.required,
+      Validators.maxLength(24),
+    ]),
+    name: new FormControl({ value: '', disabled: false }, [
+      Validators.required,
+      Validators.maxLength(24),
+    ]),
+    ipv4: new FormControl({ value: '', disabled: false }, [
+      Validators.required,
+    ]),
   });
+
   constructor(
     private service: ApiService,
     private toastr: ToastrService,
@@ -86,7 +104,9 @@ export class GatewayAddEditFormComponent implements OnInit {
   };
 
   onSubmit() {
-    console.warn(this.gatewayForm.value);
+    if (!this.gatewayForm.valid) {
+      return;
+    }
 
     this.loading = true;
     this.serverErrors = [];
