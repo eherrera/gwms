@@ -20,7 +20,9 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="serialNumber">Serial number: </label>
+                        <label for="serialNumber"
+                            >{{ fields.serialNumber }}:
+                        </label>
                         <input
                             id="serialNumber"
                             type="text"
@@ -29,7 +31,7 @@
                         />
                     </div>
                     <div class="col-md-4">
-                        <label for="name">Name: </label>
+                        <label for="name">{{ fields.name }}: </label>
                         <input
                             id="name"
                             type="text"
@@ -38,7 +40,7 @@
                         />
                     </div>
                     <div class="col-md-4">
-                        <label for="ipv4">IP v4: </label>
+                        <label for="ipv4">{{ fields.ipv4 }}: </label>
                         <input
                             id="ipv4"
                             type="text"
@@ -51,12 +53,17 @@
             <div class="card-footer">
                 <button
                     type="submit"
+                    [disabled]="loading"
                     class="btn btn-default"
                     [routerLink]="['/']"
                 >
                     Cancel
                 </button>
-                <button type="submit" class="btn btn-primary float-right">
+                <button
+                    type="submit"
+                    class="btn btn-primary float-right"
+                    [disabled]="!gatewayForm.valid"
+                >
                     Save
                 </button>
             </div>

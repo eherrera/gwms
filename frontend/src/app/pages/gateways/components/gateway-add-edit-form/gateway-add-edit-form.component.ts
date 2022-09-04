@@ -17,6 +17,20 @@ export class GatewayAddEditFormComponent implements OnInit {
 
   serverErrors = [];
 
+  fields = {
+    name: 'Name',
+    serialNumber: 'Serial number',
+    ipv4: 'IP v4',
+  };
+
+  errors = {
+    IS_EMPTY: 'is empty',
+    NOT_A_VALID_IP: 'is not a valid ip v4',
+    GATEWAY_ALREADY_EXISTS:
+      'Gateway with the same serial number already exists',
+    // ...
+  };
+
   gatewayForm = new FormGroup({
     serialNumber: new FormControl(
       { value: '', disabled: false },
@@ -41,34 +55,32 @@ export class GatewayAddEditFormComponent implements OnInit {
 
   processServerErrors = (err: HttpErrorResponse) => {
     this.serverErrors = [];
-    if (
-      !err.error ||
-      !err.error.errors ||
-      !err.error.errors.msg ||
-      !Array.isArray(err.error.errors.msg)
-    ) {
-      return;
-    }
-    const fields = {
-      name: 'Name',
-      serialNumber: 'Serial number',
-      ipv4: 'IP v4',
-    };
-    const errors = {
-      IS_EMPTY: 'is empty',
-      NOT_A_VALID_IP: 'is not a valid ip v4',
-      // ...
-    };
     const displayName = (param: string, dict: object) => {
       if (dict[param]) {
         return dict[param];
       }
       return param;
     };
+    if (!err.error || !err.error.errors || !err.error.errors.msg) {
+      return;
+    }
+
+    if (typeof err.error.errors.msg === 'string') {
+      const readableErrMsg = displayName(err.error.errors.msg, this.errors);
+      this.serverErrors.push(readableErrMsg);
+      return;
+    }
+
+    if (!Array.isArray(err.error.errors.msg)) {
+      return;
+    }
 
     err.error.errors.msg.forEach((e) => {
       this.serverErrors.push(
-        `${displayName(e.param, fields)} ${displayName(e.msg, errors)}`
+        `${displayName(e.param, this.fields)} ${displayName(
+          e.msg,
+          this.errors
+        )}`
       );
     });
   };
