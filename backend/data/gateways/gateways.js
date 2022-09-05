@@ -8,7 +8,7 @@ const genDevices = (count) => {
         min: 10000000,
         max: 99999999
       }),
-      vendor: faker.company.companyName(),
+      vendor: faker.company.companyName().substr(0, 24),
       created: faker.date.past(),
       status: faker.datatype.boolean()
     })
