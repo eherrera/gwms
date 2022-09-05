@@ -1,0 +1,5 @@
+- STACK_NAME=<STACK_NAME>
+- APP_REGION=<APP_REGION_NAME>
+- ARTIFACTS_BUCKET=<ARTIFACTS_BUCKET_NAME>
+- sam package --template-file ./cloudformation/template.yml --output-template-file ./cloudformation/packaged.yml --s3-bucket $ARTIFACTS_BUCKET
+- sam deploy --no-fail-on-empty-changeset --region $APP_REGION --template-file ./cloudformation/packaged.yml --stack-name $STACK_NAME --s3-bucket $ARTIFACTS_BUCKET --capabilities CAPABILITY_NAMED_IAM --parameter-overrides GWMSSiteS3BucketName=$BUCKET_NAME
