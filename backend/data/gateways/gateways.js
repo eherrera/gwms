@@ -23,7 +23,7 @@ const genGateways = (count) => {
 
     result.push({
       //   _id: new ObjectID(faker.random.hexaDecimal(24)),
-      serial_number: faker.datatype.uuid(),
+      serial_number: faker.random.alphaNumeric(12),
       name: `Gateway ${faker.random.alphaNumeric(6)}`,
       ipv4: faker.internet.ip(),
       devices_count: devices.length,
