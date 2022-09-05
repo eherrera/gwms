@@ -37,13 +37,17 @@ There are 4 available commands for this: fresh, clean, seed and dev:
     clean: cleans the database
     seed: seeds the database with dynamic data
     dev: run the backend in development mode
- 5. frontend: How to run
+
+
+5. Postman collection in backend/gwms.postman_collection.json 
+
+6. frontend: How to run
 
 `cd ../frontend`
 
 `npm run start`
 
-6. frontend: Unit tests
+7. frontend: Unit tests
 
 `npm run test`
     

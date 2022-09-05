@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "1dbb6653-8586-4cee-b0a1-67116e3b7d1a",
+		"name": "gwms",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "gateways",
+			"item": [
+				{
+					"name": "/gateways",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "dMusKPZTdd88rdej6jojs7Coqu1Mgakt5NQo2rIN",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "x-api-key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/gateways?fields=name,serial_number,ipv4&page=1&limit=10&sort=ipv4&order=-1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"gateways"
+							],
+							"query": [
+								{
+									"key": "fields",
+									"value": "name,serial_number,ipv4"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "ipv4"
+								},
+								{
+									"key": "order",
+									"value": "-1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/gateways",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "serialNumber",
+									"value": "a522dxxds622s55sssd",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "KPsGw233342",
+									"type": "text"
+								},
+								{
+									"key": "ipv4",
+									"value": "10.0.0.8",
+									"type": "text"
+								},
+								{
+									"key": "devices",
+									"value": "[{\"uid\": 11511, \"vendor\": \"samsung\", \"status\": false},{\"uid\": 11511, \"vendor\": \"samsung\", \"status\": false}]",
+									"type": "text"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/gateways",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"gateways"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/gateways/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}/gateways/6312c8f75c240f49d4811769",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"gateways",
+								"6312c8f75c240f49d4811769"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/gateways/:id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{server}}/gateways/631465834e611810fc8c584a",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"gateways",
+								"631465834e611810fc8c584a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/gateways/:id",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "serialNumber",
+									"value": "a522dxxds622s55sssd",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "KPsGw233342",
+									"type": "text"
+								},
+								{
+									"key": "ipv4",
+									"value": "10.0.0.8",
+									"type": "text"
+								},
+								{
+									"key": "devices",
+									"value": "[{\"uid\": 11511, \"vendor\": \"samsung\", \"status\": false, \"created\": \"2022-09-01\"},{\"uid\": 11511, \"vendor\": \"samsung\", \"status\": false, \"created\": \"2022-08-01\"}]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/gateways/6312c8f75c240f49d4811765",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"gateways",
+								"6312c8f75c240f49d4811765"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "id ASC",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "where",
+									"value": "{ 'email' : { startsWith : 'f' } }",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
