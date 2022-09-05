@@ -42,4 +42,8 @@ There are 4 available commands for this: fresh, clean, seed and dev:
 `cd ../frontend`
 
 `npm run start`
+
+6. frontend: Unit tests
+
+`npm run test`
     
